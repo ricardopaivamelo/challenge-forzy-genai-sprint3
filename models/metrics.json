@@ -1,0 +1,86 @@
+{
+  "macro_f1": 0.7970422855913,
+  "accuracy": 0.9530666666666666,
+  "por_classe": {
+    "Normal": {
+      "precision": 0.9813055932458917,
+      "recall": 0.9795334838224229,
+      "f1-score": 0.9804187377617111,
+      "support": 6645.0
+    },
+    "Desbalanceamento": {
+      "precision": 0.716931216931217,
+      "recall": 0.928082191780822,
+      "f1-score": 0.808955223880597,
+      "support": 292.0
+    },
+    "Superaquecimento": {
+      "precision": 0.6774193548387096,
+      "recall": 0.7241379310344828,
+      "f1-score": 0.7,
+      "support": 348.0
+    },
+    "Falha mecânica": {
+      "precision": 0.9914529914529915,
+      "recall": 0.5395348837209303,
+      "f1-score": 0.6987951807228916,
+      "support": 215.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      6509,
+      62,
+      73,
+      1
+    ],
+    [
+      21,
+      271,
+      0,
+      0
+    ],
+    [
+      96,
+      0,
+      252,
+      0
+    ],
+    [
+      7,
+      45,
+      47,
+      116
+    ]
+  ],
+  "feature_importances": {
+    "rotacao_rpm": 0.2628,
+    "vibracao_mm_s": 0.3655,
+    "temperatura_c": 0.2237,
+    "corrente_a": 0.148
+  },
+  "motores_treino": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12,
+    13,
+    14,
+    17,
+    18,
+    19,
+    20
+  ],
+  "motores_teste": [
+    1,
+    2,
+    10,
+    15,
+    16
+  ]
+}

@@ -1,0 +1,11 @@
+# Ambiente
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Segredos — NUNCA commitar
+.env
+
+# Saídas grandes/regeneráveis (o modelo é entregável, então NÃO ignorado)
+# models/modelo_falhas.joblib  -> versionado (é entregável)

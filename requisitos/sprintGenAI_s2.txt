@@ -1,0 +1,81 @@
+Sprint 2: Análise Exploratória, Modelo Baseline de Manutenção Preditiva e Agente Conversacional com Function Calling
+
+
+
+Nesta atividade, a equipe avança da etapa de estruturação dos dados para a construção do primeiro modelo funcional de Machine Learning do projeto e, em seguida, integra esse modelo a um agente conversacional que utiliza *function calling* para avaliar motores em linguagem natural. O foco da sprint é, portanto, triplo: **realizar a análise exploratória dos dados**, **treinar e avaliar um modelo baseline de predição de falhas em motores industriais** e **expor esse modelo a um chatbot** capaz de receber leituras de sensores diretamente do usuário e retornar um diagnóstico das possíveis falhas.
+
+
+
+Problema
+
+
+
+Após a organização inicial dos dados de sensores em [motor.db](motor.db) (rotação, vibração, temperatura e corrente para 20 motores ao longo de 1.500 leituras cada), o projeto precisa validar se essas variáveis carregam sinal suficiente para antecipar falhas. As leituras apresentam ruído, janelas de deterioração com rampa progressiva, desbalanceamento de classes (~87,6% normal · ~12,4% falhas distribuídas entre desbalanceamento, superaquecimento e falha mecânica) e padrões temporais que precisam ser tratados antes da modelagem.
+
+O desafio da sprint é transformar essa base em uma solução preditiva funcional **e operacionalizável por um usuário não técnico**: dado um conjunto de leituras de um motor (rotação, vibração, temperatura, corrente), o sistema deve indicar se há risco de falha e, em caso positivo, qual o tipo mais provável (desbalanceamento, superaquecimento ou falha mecânica).
+
+
+
+Objetivos
+
+1. **Desenvolver e avaliar o modelo baseline.** Executar todo o ciclo: carregar a base, fazer análise exploratória, tratar os dados, dividir em treino/teste (respeitando a natureza temporal das leituras), treinar um classificador para a coluna `falha` da tabela `leituras` e avaliar o desempenho com métricas apropriadas (matriz de confusão, precisão, recall e F1 por classe — relevantes pelo desbalanceamento).
+
+2. **Usar o modelo para predizer falhas em motores.** A variável-alvo é o código de falha (`0` Normal, `1` Desbalanceamento, `2` Superaquecimento, `3` Falha mecânica). O modelo deve ser serializado (já presente como [modelo_falhas.joblib](modelo_falhas.joblib)) para reutilização fora do notebook de treinamento.
+
+3. **Integrar o modelo a um agente conversacional via *function calling*.** Construir uma interface de chat em que o usuário descreve ou envia as leituras de um motor (ex.: "motor com vibração 8,2 mm/s, temperatura 92 °C, corrente 15,5 A, rotação 1.720 RPM") e o bot, por meio de uma *tool* registrada na API do modelo de linguagem, invoca o modelo de ML treinado e retorna a avaliação das possíveis falhas — incluindo a classe prevista, a probabilidade associada e uma explicação em linguagem natural baseada nos padrões característicos descritos em [BANCO.md](BANCO.md).
+
+
+
+Entregáveis
+
+1. Descrição do problema preditivo
+
+Texto definindo a tarefa como **classificação multiclasse** sobre o estado operacional do motor (`falha` ? {0,1,2,3}), justificando por que a antecipação de falhas é o caminho para uma solução de manutenção preditiva.
+
+2. Descrição da base de dados utilizada
+
+Documentação da origem ([gerar_banco.py](gerar_banco.py)), do schema (tabelas `motores`, `leituras` e `tipos_falha`), do volume (30.000 linhas) e do significado da variável-alvo, conforme já consolidado em [BANCO.md](BANCO.md).
+
+3. Análise exploratória de dados
+
+Em [analise_exploratoria.ipynb](analise_exploratoria.ipynb): distribuição da variável-alvo, distribuições das variáveis de sensor por classe de falha, presença de outliers, evolução temporal das leituras nas janelas de falha (mostrando a rampa progressiva) e correlações entre sensores. Cada gráfico deve vir acompanhado de uma interpretação ligando a observação ao comportamento físico esperado (ex.: aumento simultâneo de temperatura e corrente apontando para superaquecimento).
+
+4. Tratamento e preparação dos dados
+
+Descrição do tratamento de valores ausentes, normalização/padronização dos sensores, codificação de variáveis categóricas (`fabricante`, `modelo`), estratégia para o desbalanceamento de classes (ex.: `class_weight`, oversampling, *stratified sampling*) e eventual criação de *features* de janela móvel para capturar a rampa de deterioração descrita no banco.
+
+5. Divisão dos dados para treinamento e avaliação
+
+Justificativa da estratégia adotada. Como `leituras` é uma série temporal por motor, deve-se priorizar **divisão cronológica** ou *group split* por `motor_id` para evitar vazamento de informação entre treino e teste.
+
+6. Treinamento do modelo baseline
+
+Em [treinamento.ipynb](treinamento.ipynb): treino de pelo menos um classificador adequado (Regressão Logística, Random Forest, XGBoost ou LightGBM), justificando a escolha e listando os principais hiperparâmetros. Persistir o modelo treinado em [modelo_falhas.joblib](modelo_falhas.joblib).
+
+7. Avaliação do desempenho do modelo
+
+Matriz de confusão, precisão, recall e F1 por classe, além de acurácia global. A interpretação deve considerar especialmente o desempenho nas três classes minoritárias de falha, pois é nelas que a manutenção preditiva traz valor.
+
+8. Análise dos erros do modelo
+
+Investigação dos casos em que o modelo erra: erros concentrados em alguma classe de falha, em motores específicos, em determinadas faixas de leitura ou no início das janelas de falha (quando a rampa ainda é leve). Essa análise orienta as melhorias para a próxima sprint.
+
+9. Agente conversacional com *function calling*
+
+Implementação de um chat em que:
+
+- uma *tool* `prever_falha_motor(rotacao_rpm, vibracao_mm_s, temperatura_c, corrente_a)` é registrada no modelo de linguagem;
+
+- ao receber as leituras do usuário, o LLM decide invocar a *tool*, que carrega [modelo_falhas.joblib](modelo_falhas.joblib) e retorna a classe prevista e as probabilidades;
+
+- o LLM transforma a resposta da *tool* em uma explicação acessível, citando o tipo de falha previsto, o nível de risco e quais sensores mais contribuíram para o diagnóstico.
+
+
+
+A equipe deve demonstrar o agente em pelo menos três cenários: (i) motor em operação normal, (ii) motor com padrão claro de uma das três falhas e (iii) motor com leituras ambíguas, para evidenciar como o agente comunica incerteza.
+
+10. Código e organização do experimento
+
+Notebooks ([analise_exploratoria.ipynb](analise_exploratoria.ipynb), [treinamento.ipynb](treinamento.ipynb)) e código do agente entregues organizados, com seções, comentários e instruções de execução suficientes para reprodução por outra pessoa a partir de [requirements.txt](requirements.txt).
+
+
