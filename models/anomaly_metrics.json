@@ -172,32 +172,32 @@
   },
   "event_metrics": {
     "statistical": {
-      "events": 23,
-      "detected_events": 23,
+      "events": 19,
+      "detected_events": 19,
       "event_recall": 1.0,
-      "anticipated_events": 12,
-      "median_lead_minutes": 1.0
+      "anticipated_events": 5,
+      "median_lead_minutes": -4.0
     },
     "isolation_forest": {
-      "events": 23,
-      "detected_events": 23,
+      "events": 19,
+      "detected_events": 19,
       "event_recall": 1.0,
-      "anticipated_events": 11,
-      "median_lead_minutes": -5.0
-    },
-    "autoencoder": {
-      "events": 23,
-      "detected_events": 23,
-      "event_recall": 1.0,
-      "anticipated_events": 9,
+      "anticipated_events": 4,
       "median_lead_minutes": -7.0
     },
+    "autoencoder": {
+      "events": 19,
+      "detected_events": 19,
+      "event_recall": 1.0,
+      "anticipated_events": 1,
+      "median_lead_minutes": -12.0
+    },
     "sprint2": {
-      "events": 23,
-      "detected_events": 20,
-      "event_recall": 0.8695652173913043,
-      "anticipated_events": 7,
-      "median_lead_minutes": -7.5
+      "events": 19,
+      "detected_events": 16,
+      "event_recall": 0.8421052631578947,
+      "anticipated_events": 2,
+      "median_lead_minutes": -10.5
     }
   },
   "best_anomaly_model": "statistical"

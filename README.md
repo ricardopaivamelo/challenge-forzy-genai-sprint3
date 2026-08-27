@@ -52,10 +52,10 @@ está em `data/BANCO.pdf`.
 
 | Modelo | Eventos detectados | Antecipados | Lead mediano |
 |---|---:|---:|---:|
-| Baseline estatístico | 23/23 | 12 | +1 min |
-| Isolation Forest | 23/23 | 11 | −5 min |
-| Autoencoder | 23/23 | 9 | −7 min |
-| Random Forest — Sprint 2 | 20/23 | 7 | −7,5 min |
+| Baseline estatístico | 19/19 | 5 | −4 min |
+| Isolation Forest | 19/19 | 4 | −7 min |
+| Autoencoder | 19/19 | 1 | −12 min |
+| Random Forest — Sprint 2 | 16/19 | 2 | −10,5 min |
 
 O baseline estatístico obteve o melhor PR-AUC entre os detectores. O Autoencoder produziu
 menos falsos positivos entre eles, enquanto o Random Forest continua superior para reconhecer

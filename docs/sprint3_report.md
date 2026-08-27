@@ -51,10 +51,10 @@ apoia a explicação. O baseline estatístico funciona como referência auditáv
 
 | Modelo | Eventos detectados | Recall por evento | Antecipados | Lead mediano (min) |
 |---|---:|---:|---:|---:|
-| Baseline estatístico | 23/23 | 1.000 | 12 | 1.0 |
-| Isolation Forest | 23/23 | 1.000 | 11 | -5.0 |
-| Autoencoder | 23/23 | 1.000 | 9 | -7.0 |
-| Random Forest — Sprint 2 | 20/23 | 0.870 | 7 | -7.5 |
+| Baseline estatístico | 19/19 | 1.000 | 5 | -4.0 |
+| Isolation Forest | 19/19 | 1.000 | 4 | -7.0 |
+| Autoencoder | 19/19 | 1.000 | 1 | -12.0 |
+| Random Forest — Sprint 2 | 16/19 | 0.842 | 2 | -10.5 |
 
 O melhor PR-AUC entre os detectores de anomalia foi **statistical**. O
 resultado mostra que complexidade não garante superioridade: o baseline estatístico é uma

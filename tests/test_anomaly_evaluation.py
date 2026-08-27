@@ -30,7 +30,7 @@ def test_binary_metrics_match_hand_checked_confusion_matrix():
     assert result["false_positive_rate"] == pytest.approx(0.5)
 
 
-def test_extract_fault_events_splits_normal_gap_and_fault_class_change():
+def test_extract_fault_events_splits_normal_gap_but_keeps_class_change_in_episode():
     readings = pd.DataFrame(
         {
             "motor_id": [1] * 8,
@@ -41,13 +41,14 @@ def test_extract_fault_events_splits_normal_gap_and_fault_class_change():
 
     events = extract_fault_events(readings)
 
-    assert events["fault_class"].tolist() == [2, 2, 3]
-    assert events["duration_minutes"].tolist() == [2, 2, 2]
+    assert events["fault_classes"].tolist() == ["2", "2,3"]
+    assert events["primary_fault_class"].tolist() == [2, 2]
+    assert events["duration_minutes"].tolist() == [2, 4]
     assert events["start"].tolist() == [
         pd.Timestamp("2026-01-01 00:01:00"),
         pd.Timestamp("2026-01-01 00:04:00"),
-        pd.Timestamp("2026-01-01 00:06:00"),
     ]
+    assert events.loc[1, "previous_end"] == pd.Timestamp("2026-01-01 00:02:00")
 
 
 def test_event_evaluation_reports_positive_lead_time_for_early_alert():
@@ -55,10 +56,12 @@ def test_event_evaluation_reports_positive_lead_time_for_early_alert():
         {
             "event_id": [1],
             "motor_id": [7],
-            "fault_class": [2],
+            "fault_classes": ["2"],
+            "primary_fault_class": [2],
             "start": [pd.Timestamp("2026-01-01 00:10:00")],
             "end": [pd.Timestamp("2026-01-01 00:15:00")],
             "duration_minutes": [6],
+            "previous_end": [pd.NaT],
         }
     )
     scored = pd.DataFrame(
@@ -77,6 +80,34 @@ def test_event_evaluation_reports_positive_lead_time_for_early_alert():
     assert details.loc[0, "lead_minutes"] == pytest.approx(5.0)
     assert summary["event_recall"] == pytest.approx(1.0)
     assert summary["median_lead_minutes"] == pytest.approx(5.0)
+
+
+def test_event_evaluation_does_not_reuse_alert_contaminated_by_previous_event():
+    events = pd.DataFrame(
+        {
+            "event_id": [1, 2],
+            "motor_id": [7, 7],
+            "fault_classes": ["1", "2"],
+            "primary_fault_class": [1, 2],
+            "start": pd.to_datetime(["2026-01-01 00:00", "2026-01-01 00:20"]),
+            "end": pd.to_datetime(["2026-01-01 00:10", "2026-01-01 00:30"]),
+            "duration_minutes": [11, 11],
+            "previous_end": [pd.NaT, pd.Timestamp("2026-01-01 00:10")],
+        }
+    )
+    scored = pd.DataFrame(
+        {
+            "motor_id": [7, 7],
+            "timestamp": pd.to_datetime(["2026-01-01 00:10", "2026-01-01 00:25"]),
+            "autoencoder_persistent": [True, True],
+        }
+    )
+
+    details, _ = evaluate_events(events, scored, "autoencoder", window_size_minutes=30)
+
+    assert details.loc[1, "first_alert"] == pd.Timestamp("2026-01-01 00:25")
+    assert details.loc[1, "lead_minutes"] == pytest.approx(-5.0)
+    assert not bool(details.loc[1, "anticipated"])
 
 
 def test_rankings_use_only_requested_partition_and_alerted_sensor_errors():

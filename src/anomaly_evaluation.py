@@ -65,55 +65,54 @@ def binary_metrics(
 
 
 def extract_fault_events(readings: pd.DataFrame) -> pd.DataFrame:
-    """Agrupa rótulos positivos contíguos de mesma classe em eventos."""
+    """Agrupa qualquer sequência positiva contígua em um episódio de falha."""
 
     required = {"motor_id", "timestamp", "falha"}
     missing = required - set(readings.columns)
     if missing:
         raise ValueError(f"Colunas ausentes para eventos: {sorted(missing)}")
     ordered = readings.sort_values(["motor_id", "timestamp"])
+    positive = ordered.loc[ordered["falha"].gt(0), ["motor_id", "timestamp", "falha"]].copy()
+    columns = [
+        "event_id",
+        "motor_id",
+        "fault_classes",
+        "primary_fault_class",
+        "start",
+        "end",
+        "duration_minutes",
+        "previous_end",
+    ]
+    if positive.empty:
+        return pd.DataFrame(columns=columns)
+    previous_motor = positive["motor_id"].shift()
+    previous_timestamp = positive["timestamp"].shift()
+    new_event = positive["motor_id"].ne(previous_motor) | (
+        positive["timestamp"] - previous_timestamp
+    ).ne(pd.Timedelta(minutes=1))
+    positive["event_group"] = new_event.cumsum()
+
     events: list[dict[str, object]] = []
-    event_id = 0
-    current: dict[str, object] | None = None
-
-    for row in ordered[["motor_id", "timestamp", "falha"]].itertuples(index=False):
-        motor_id = int(row.motor_id)
-        timestamp = pd.Timestamp(row.timestamp)
-        fault_class = int(row.falha)
-        continues = bool(
-            current is not None
-            and fault_class > 0
-            and motor_id == current["motor_id"]
-            and fault_class == current["fault_class"]
-            and timestamp - current["end"] == pd.Timedelta(minutes=1)
-        )
-        if continues:
-            current["end"] = timestamp
-            continue
-        if current is not None:
-            events.append(current)
-            current = None
-        if fault_class > 0:
-            event_id += 1
-            current = {
+    for event_id, (_, group) in enumerate(positive.groupby("event_group", sort=True), start=1):
+        counts = group["falha"].value_counts()
+        most_common = counts.loc[counts.eq(counts.max())].index.min()
+        classes_in_order = list(dict.fromkeys(int(value) for value in group["falha"]))
+        events.append(
+            {
                 "event_id": event_id,
-                "motor_id": motor_id,
-                "fault_class": fault_class,
-                "start": timestamp,
-                "end": timestamp,
+                "motor_id": int(group["motor_id"].iloc[0]),
+                "fault_classes": ",".join(str(value) for value in classes_in_order),
+                "primary_fault_class": int(most_common),
+                "start": pd.Timestamp(group["timestamp"].iloc[0]),
+                "end": pd.Timestamp(group["timestamp"].iloc[-1]),
             }
-    if current is not None:
-        events.append(current)
-
-    columns = ["event_id", "motor_id", "fault_class", "start", "end"]
-    result = pd.DataFrame(events, columns=columns)
-    if result.empty:
-        result["duration_minutes"] = pd.Series(dtype=int)
-        return result
+        )
+    result = pd.DataFrame(events)
     result["duration_minutes"] = (
         (result["end"] - result["start"]).dt.total_seconds() / 60 + 1
     ).astype(int)
-    return result
+    result["previous_end"] = result.groupby("motor_id")["end"].shift()
+    return result[columns]
 
 
 def evaluate_events(
@@ -121,6 +120,7 @@ def evaluate_events(
     scored: pd.DataFrame,
     model_name: str,
     lead_window_minutes: int = 60,
+    window_size_minutes: int = 30,
 ) -> tuple[pd.DataFrame, dict[str, object]]:
     """Mede detecção persistente e antecedência por evento rotulado."""
 
@@ -132,9 +132,19 @@ def evaluate_events(
         window_start = pd.Timestamp(event.start) - pd.Timedelta(
             minutes=lead_window_minutes
         )
+        previous_end = getattr(event, "previous_end", pd.NaT)
+        if not pd.isna(previous_end):
+            clean_start = pd.Timestamp(previous_end) + pd.Timedelta(
+                minutes=window_size_minutes
+            )
+            window_start = max(window_start, clean_start)
+        before_event = scored["timestamp"].ge(window_start) & scored["timestamp"].lt(
+            event.start
+        )
+        during_event = scored["timestamp"].between(event.start, event.end)
         candidates = scored.loc[
             scored["motor_id"].eq(event.motor_id)
-            & scored["timestamp"].between(window_start, event.end)
+            & (before_event | during_event)
             & scored[persistent_column].astype(bool)
         ].sort_values("timestamp")
         detected = not candidates.empty
