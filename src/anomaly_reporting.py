@@ -280,4 +280,3 @@ eventos, comparação e contrato conversacional. O notebook executado apresenta 
 - rótulo atrasado dificulta distinguir antecipação real de falso positivo pré-evento;
 - erro por sensor explica reconstrução, não causa física.
 """
-

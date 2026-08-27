@@ -19,4 +19,3 @@ Entregáveis:
 12. Notebooks/scripts organizados, comentados e reproduzíveis.
 
 Prazo informado pelo grupo: 31/08/2026.
-

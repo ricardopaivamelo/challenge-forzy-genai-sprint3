@@ -51,4 +51,3 @@ def build_agent_payload(
         "sensor_errors": {name: float(value) for name, value in sensor_errors.items()},
         "explanation": explanation,
     }
-

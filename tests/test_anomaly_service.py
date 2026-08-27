@@ -29,4 +29,3 @@ def test_agent_payload_keeps_normal_reading_without_inspection_alert():
 
     assert payload["severity"] == "normal"
     assert "dentro do baseline" in payload["explanation"].lower()
-
