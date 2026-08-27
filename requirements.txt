@@ -15,6 +15,7 @@ jupyter>=1.0
 nbformat>=5.10
 nbconvert>=7.16
 ipykernel>=6.29
+pytest>=8.0
 
 # Agente conversacional (function calling) — usar UM dos provedores
 openai>=1.40
