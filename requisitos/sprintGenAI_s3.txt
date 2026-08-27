@@ -1,0 +1,22 @@
+Sprint 3: Modelo para Baseline e Detecção de Anomalias
+
+Objetivo: evoluir o modelo da Sprint 2 usando o histórico da Forzy para definir o
+comportamento esperado dos equipamentos e detectar leituras ou períodos fora do padrão,
+apoiando manutenção preditiva e priorização de inspeções.
+
+Entregáveis:
+1. Descrição do problema, normalidade, anomalia, relevância e tipo de abordagem.
+2. Origem, formato, volume, período, frequência, sensores, eventos e falhas da base.
+3. EDA com distribuições, tempo, outliers, correlações e diferenças entre equipamentos.
+4. Definição e justificativa do baseline operacional.
+5. Tratamento, normalização, janelas temporais e seleção de variáveis.
+6. Treinamento de pelo menos um modelo ML/DL e explicação do score.
+7. Métricas com rótulos ou validação visual/técnica sem rótulos.
+8. Investigação dos equipamentos, períodos e sensores mais anômalos.
+9. Comparação com o classificador de falhas da Sprint 2.
+10. Séries com anomalias, scores, ranking e distribuições.
+11. Proposta de consulta por agente: score, severidade, sensores e explicação.
+12. Notebooks/scripts organizados, comentados e reproduzíveis.
+
+Prazo informado pelo grupo: 31/08/2026.
+
