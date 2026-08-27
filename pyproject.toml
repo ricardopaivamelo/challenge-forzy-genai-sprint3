@@ -4,4 +4,5 @@ testpaths = ["tests"]
 addopts = "-ra"
 filterwarnings = [
   "ignore:Setting the shape on a NumPy array has been deprecated:DeprecationWarning:joblib.numpy_pickle",
+  "ignore:The set_bad function will be deprecated:PendingDeprecationWarning:seaborn.matrix",
 ]

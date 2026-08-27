@@ -1,0 +1,204 @@
+{
+  "data": {
+    "motors": 20,
+    "readings": 30000,
+    "windows": 5900,
+    "start": "2026-01-01T00:00:00",
+    "end": "2026-01-02T00:59:00",
+    "missing_values": 0,
+    "duplicate_motor_timestamps": 0,
+    "label_counts": {
+      "0": 26291,
+      "1": 1205,
+      "2": 1718,
+      "3": 786
+    },
+    "partition_windows": {
+      "train": 3540,
+      "test": 1475,
+      "validation": 885
+    }
+  },
+  "split": {
+    "train_motors": [
+      4,
+      5,
+      6,
+      7,
+      9,
+      11,
+      12,
+      14,
+      17,
+      18,
+      19,
+      20
+    ],
+    "validation_motors": [
+      3,
+      8,
+      13
+    ],
+    "test_motors": [
+      1,
+      2,
+      10,
+      15,
+      16
+    ]
+  },
+  "window_config": {
+    "window_size": 30,
+    "stride": 5,
+    "calibration_size": 30,
+    "guard_size": 30
+  },
+  "thresholds": {
+    "statistical": 1.2049415558242635,
+    "isolation_forest": 0.5250673977725031,
+    "autoencoder": 0.9512501159120564
+  },
+  "threshold_source": "validation_normal_guard_clean",
+  "fit_counts": {
+    "train": 2407,
+    "validation_threshold": 556
+  },
+  "training_info": {
+    "threshold_quantile": 0.99,
+    "autoencoder_iterations": 46,
+    "autoencoder_loss": 0.39296468793349437
+  },
+  "window_metrics": {
+    "statistical": {
+      "threshold": 1.2049415558242635,
+      "precision": 0.5821917808219178,
+      "recall": 0.9883720930232558,
+      "f1": 0.7327586206896551,
+      "roc_auc": 0.9660354459297864,
+      "pr_auc": 0.7018228310807925,
+      "false_positive_rate": 0.09363008442056792,
+      "support_normal": 1303,
+      "support_anomaly": 172,
+      "confusion_matrix": [
+        [
+          1181,
+          122
+        ],
+        [
+          2,
+          170
+        ]
+      ],
+      "true_positive": 170,
+      "false_positive": 122,
+      "false_negative": 2,
+      "true_negative": 1181
+    },
+    "isolation_forest": {
+      "threshold": 0.5250673977725031,
+      "precision": 0.5785714285714286,
+      "recall": 0.9418604651162791,
+      "f1": 0.7168141592920354,
+      "roc_auc": 0.9569954844812508,
+      "pr_auc": 0.6652972140417497,
+      "false_positive_rate": 0.09056024558710668,
+      "support_normal": 1303,
+      "support_anomaly": 172,
+      "confusion_matrix": [
+        [
+          1185,
+          118
+        ],
+        [
+          10,
+          162
+        ]
+      ],
+      "true_positive": 162,
+      "false_positive": 118,
+      "false_negative": 10,
+      "true_negative": 1185
+    },
+    "autoencoder": {
+      "threshold": 0.9512501159120564,
+      "precision": 0.6045627376425855,
+      "recall": 0.9244186046511628,
+      "f1": 0.7310344827586207,
+      "roc_auc": 0.9465678487925895,
+      "pr_auc": 0.5374488532556799,
+      "false_positive_rate": 0.07981580966999233,
+      "support_normal": 1303,
+      "support_anomaly": 172,
+      "confusion_matrix": [
+        [
+          1199,
+          104
+        ],
+        [
+          13,
+          159
+        ]
+      ],
+      "true_positive": 159,
+      "false_positive": 104,
+      "false_negative": 13,
+      "true_negative": 1199
+    },
+    "sprint2": {
+      "threshold": 0.5,
+      "precision": 0.8604651162790697,
+      "recall": 0.8604651162790697,
+      "f1": 0.8604651162790697,
+      "roc_auc": 0.9799724249941995,
+      "pr_auc": 0.923184918738209,
+      "false_positive_rate": 0.01841903300076746,
+      "support_normal": 1303,
+      "support_anomaly": 172,
+      "confusion_matrix": [
+        [
+          1279,
+          24
+        ],
+        [
+          24,
+          148
+        ]
+      ],
+      "true_positive": 148,
+      "false_positive": 24,
+      "false_negative": 24,
+      "true_negative": 1279
+    }
+  },
+  "event_metrics": {
+    "statistical": {
+      "events": 23,
+      "detected_events": 23,
+      "event_recall": 1.0,
+      "anticipated_events": 12,
+      "median_lead_minutes": 1.0
+    },
+    "isolation_forest": {
+      "events": 23,
+      "detected_events": 23,
+      "event_recall": 1.0,
+      "anticipated_events": 11,
+      "median_lead_minutes": -5.0
+    },
+    "autoencoder": {
+      "events": 23,
+      "detected_events": 23,
+      "event_recall": 1.0,
+      "anticipated_events": 9,
+      "median_lead_minutes": -7.0
+    },
+    "sprint2": {
+      "events": 23,
+      "detected_events": 20,
+      "event_recall": 0.8695652173913043,
+      "anticipated_events": 7,
+      "median_lead_minutes": -7.5
+    }
+  },
+  "best_anomaly_model": "statistical"
+}
