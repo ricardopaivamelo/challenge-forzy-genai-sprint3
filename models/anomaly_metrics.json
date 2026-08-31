@@ -200,16 +200,5 @@
       "median_lead_minutes": -10.5
     }
   },
-  "best_anomaly_model": "statistical",
-  "acceleration_contract": {
-    "attention_min": 0.14865314273059071,
-    "critical_min": 0.18130735486242083,
-    "attention_quantile": 0.95,
-    "critical_quantile": 0.99,
-    "normal_readings": 26291,
-    "normal_min": 0.024799507871034188,
-    "normal_max": 0.27974227819598446,
-    "method": "sinusoidal_60hz_from_vibration_with_seeded_noise",
-    "limitation": "simulated_acceleration_not_industrial_measurement"
-  }
+  "best_anomaly_model": "statistical"
 }
