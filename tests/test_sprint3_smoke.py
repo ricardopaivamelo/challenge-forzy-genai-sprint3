@@ -36,11 +36,16 @@ def test_pipeline_generates_finite_metrics_and_reproducible_artifacts(tmp_path):
     metrics_path = tmp_path / "models" / "anomaly_metrics.json"
     model_path = tmp_path / "models" / "modelo_anomalias.joblib"
     score_path = tmp_path / "results" / "anomaly_scores.csv"
+    acceleration_path = tmp_path / "results" / "acceleration_contract_metrics.json"
     assert metrics_path.exists()
     assert model_path.exists()
     assert score_path.exists()
+    assert acceleration_path.exists()
     assert len(list((tmp_path / "figuras").glob("s3_*.png"))) == 7
     assert json.loads(metrics_path.read_text(encoding="utf-8"))["data"]["motors"] == 6
+    acceleration = json.loads(acceleration_path.read_text(encoding="utf-8"))
+    assert acceleration["normal_readings"] > 0
+    assert acceleration["attention_min"] < acceleration["critical_min"]
     assert joblib.load(model_path).threshold_source == "validation_normal_guard_clean"
     assert len(pd.read_csv(score_path)) == len(result.scored)
 

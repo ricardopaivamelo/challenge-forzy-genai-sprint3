@@ -32,6 +32,7 @@ from src.anomaly_models import (
     score_anomaly_models,
 )
 from src.anomaly_reporting import generate_figures, render_report
+from src.acceleration import calibrate_acceleration_thresholds, simulate_acceleration
 from src.data_utils import load_leituras
 
 
@@ -99,6 +100,9 @@ def run_pipeline(
         selected = sorted(readings["motor_id"].unique())[:max_motors]
         readings = readings.loc[readings["motor_id"].isin(selected)].copy()
 
+    readings = simulate_acceleration(readings, seed=42)
+    acceleration_contract = calibrate_acceleration_thresholds(readings)
+
     prepared = prepare_windows(readings)
     bundle = fit_anomaly_models(prepared)
     scored = score_anomaly_models(prepared, bundle)
@@ -164,6 +168,7 @@ def run_pipeline(
         "window_metrics": window_metrics,
         "event_metrics": event_metrics,
         "best_anomaly_model": best_anomaly_model,
+        "acceleration_contract": acceleration_contract,
     }
 
     if save_artifacts:
@@ -182,6 +187,15 @@ def run_pipeline(
         motor_ranking.to_csv(results_dir / "motor_ranking.csv", index=False)
         sensor_ranking.to_csv(results_dir / "sensor_ranking.csv", index=False)
         event_details.to_csv(results_dir / "event_detections.csv", index=False)
+        (results_dir / "acceleration_contract_metrics.json").write_text(
+            json.dumps(
+                acceleration_contract,
+                ensure_ascii=False,
+                indent=2,
+                default=_json_default,
+            ),
+            encoding="utf-8",
+        )
         generate_figures(
             readings, scored, motor_ranking, sensor_ranking, metrics, figures_dir
         )

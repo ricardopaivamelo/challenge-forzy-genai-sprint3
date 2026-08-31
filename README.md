@@ -6,6 +6,34 @@ Pipeline semissupervisionado que aprende o comportamento normal dos equipamentos
 detecta desvios em janelas históricas e compara os alertas com o classificador de falhas
 conhecidas da Sprint 2.
 
+## Entrega GOV — Inteligência Operacional e Governança da Decisão
+
+A evolução de Governança adiciona Metric Contracts para temperatura, vibração e aceleração,
+Circuit Breaker por qualidade/incerteza, handoff humano auditável e uma aplicação Streamlit
+com cinco cenários determinísticos para demonstração e gravação do vídeo.
+
+```bash
+streamlit run app.py
+```
+
+Os artefatos acadêmicos estão em `docs/gov/`:
+
+- `challenge_sprint3_gov.docx`: documento vivo em formato A4/ABNT-FIAP;
+- `metric_contracts.docx`: contrato derivado do modelo fornecido em aula;
+- `roteiro_video.md`: roteiro de 3–5 minutos com demonstração da aplicação;
+- `matriz_supervisao_PREENCHER_PELO_GRUPO.md`: matriz autoral aprovada pelo grupo;
+- `conclusao_PREENCHER_PELO_GRUPO.md`: conclusão autoral aprovada pelo grupo.
+
+Para reconstruir os documentos nesta máquina:
+
+```bash
+python scripts/build_gov_documents.py
+```
+
+A matriz de supervisão e as considerações finais foram construídas a partir das respostas e
+decisões do grupo, preservando a restrição autoral do barema. A IA foi usada somente para
+organização, revisão linguística e integração aos artefatos finais.
+
 ## Problema
 
 Uma falha industrial pode começar como uma alteração gradual antes de receber um rótulo.
