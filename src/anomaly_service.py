@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
 from datetime import datetime
 from typing import Mapping
 
 import pandas as pd
-
-from src.governance_service import GovernanceDecision
 
 
 def build_agent_payload(
@@ -19,7 +16,6 @@ def build_agent_payload(
     threshold: float,
     persistent: bool,
     sensor_errors: Mapping[str, float],
-    governance_decision: GovernanceDecision | None = None,
 ) -> dict[str, object]:
     """Converte um resultado técnico em payload factual e explicável."""
 
@@ -43,7 +39,7 @@ def build_agent_payload(
             f"Desvio {persistence_text} acima do baseline, com maior erro em "
             f"{sensor_text}. Recomenda-se inspeção técnica; o alerta não comprova a causa."
         )
-    payload = {
+    return {
         "motor_id": int(motor_id),
         "timestamp": pd.Timestamp(timestamp).isoformat(),
         "anomaly_score": float(score),
@@ -55,6 +51,3 @@ def build_agent_payload(
         "sensor_errors": {name: float(value) for name, value in sensor_errors.items()},
         "explanation": explanation,
     }
-    if governance_decision is not None:
-        payload["governance"] = asdict(governance_decision)
-    return payload
