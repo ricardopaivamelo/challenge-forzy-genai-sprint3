@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from src.academic_info import academic_markdown
 from src.data_utils import FEATURES, TIPOS_FALHA
 
 
@@ -185,6 +186,8 @@ def render_report(
     top_motor = motor_ranking.iloc[0]
     top_sensor = sensor_ranking.iloc[0]
     return f"""# Relatório técnico — Sprint 3: Baseline e Detecção de Anomalias
+
+{academic_markdown()}
 
 ## 1. Descrição do problema de anomalias
 

@@ -3,12 +3,19 @@
 from __future__ import annotations
 
 from pathlib import Path
+import sys
 from textwrap import dedent
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 import nbformat as nbf
 
+from src.academic_info import academic_markdown
 
-ROOT = Path(__file__).resolve().parents[1]
+
+ROOT = PROJECT_ROOT
 DEFAULT_OUTPUT = ROOT / "notebooks" / "sprint3_anomalias.ipynb"
 
 
@@ -24,7 +31,11 @@ def build_notebook() -> nbf.NotebookNode:
         # Sprint 3 — Modelo para Baseline e Detecção de Anomalias
 
         **Challenge Forzy · FIAP · Manutenção preditiva de motores elétricos**
-
+        """
+    )
+    md(academic_markdown())
+    md(
+        """
         Este notebook executa o pipeline completo, documenta as decisões metodológicas e
         apresenta os resultados usados na entrega. Todos os números são recalculados a partir
         de `data/motor.db`; nenhum serviço externo é necessário.
