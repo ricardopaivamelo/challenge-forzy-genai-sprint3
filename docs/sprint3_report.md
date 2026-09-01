@@ -1,5 +1,20 @@
 # Relatório técnico — Sprint 3: Baseline e Detecção de Anomalias
 
+## Identificação acadêmica
+
+**Disciplina:** Generative AI & Advanced Nets
+
+**Professor:** Mateus Azevedo Dalbone
+
+### Integrantes
+
+- Nicolas Lemos Ribeiro — RM 553273
+- Ricardo de Paiva Melo — RM 565522
+- Luís Fernando de Oliveira Salgado — RM 561401
+- Pedro Leal Murad — RM 565460
+- Murilo Benhossi — RM 562358
+- Jonas Alaf — RM 566479
+
 ## 1. Descrição do problema de anomalias
 
 O objetivo é aprender o comportamento normal de cada motor e sinalizar desvios em janelas de

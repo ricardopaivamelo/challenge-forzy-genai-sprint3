@@ -6,6 +6,21 @@ Pipeline semissupervisionado que aprende o comportamento normal dos equipamentos
 detecta desvios em janelas históricas e compara os alertas com o classificador de falhas
 conhecidas da Sprint 2.
 
+## Identificação acadêmica
+
+**Disciplina:** Generative AI & Advanced Nets
+
+**Professor:** Mateus Azevedo Dalbone
+
+### Integrantes
+
+- Nicolas Lemos Ribeiro — RM 553273
+- Ricardo de Paiva Melo — RM 565522
+- Luís Fernando de Oliveira Salgado — RM 561401
+- Pedro Leal Murad — RM 565460
+- Murilo Benhossi — RM 562358
+- Jonas Alaf — RM 566479
+
 ## Problema
 
 Uma falha industrial pode começar como uma alteração gradual antes de receber um rótulo.

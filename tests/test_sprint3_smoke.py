@@ -13,6 +13,15 @@ from src.run_sprint3 import run_pipeline
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ACADEMIC_IDENTIFICATION = (
+    "Mateus Azevedo Dalbone",
+    "Nicolas Lemos Ribeiro — RM 553273",
+    "Ricardo de Paiva Melo — RM 565522",
+    "Luís Fernando de Oliveira Salgado — RM 561401",
+    "Pedro Leal Murad — RM 565460",
+    "Murilo Benhossi — RM 562358",
+    "Jonas Alaf — RM 566479",
+)
 
 
 def test_pipeline_generates_finite_metrics_and_reproducible_artifacts(tmp_path):
@@ -43,6 +52,9 @@ def test_pipeline_generates_finite_metrics_and_reproducible_artifacts(tmp_path):
     assert json.loads(metrics_path.read_text(encoding="utf-8"))["data"]["motors"] == 6
     assert joblib.load(model_path).threshold_source == "validation_normal_guard_clean"
     assert len(pd.read_csv(score_path)) == len(result.scored)
+    report = (tmp_path / "docs" / "sprint3_report.md").read_text(encoding="utf-8")
+    for expected in ACADEMIC_IDENTIFICATION:
+        assert expected in report
 
 
 def test_documented_script_command_runs_from_repository_root(tmp_path):
